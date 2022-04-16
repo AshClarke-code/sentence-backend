@@ -28,6 +28,9 @@ app.use((req, res, next) => {
 
 app.use(express.json( { limit: "10kb" }));
 
+// NB# Please note, in development auth is bypassed and the specified test user is used by default
+// test user = userID stored at process.env.TEST_USER_ID
+
 app.use("/api/v1/sentences", sentenceRouter);
 app.use("/api/v1/words", wordRouter);
 app.use("/api/v1/users", userRouter);
