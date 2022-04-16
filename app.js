@@ -3,13 +3,15 @@ const AppError = require("./utils/appError");
 const errorhandler = require("./controllers/errorController");
 const sentenceRouter = require("./routes/sentenceRoutes");
 const wordRouter = require("./routes/wordRoutes");
+const userRouter = require("./routes/userRoutes");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
+app.use(cookieParser());
+
 //CORS!!!
 app.use((req, res, next) => {
-    //origin = domain making request
-    //wildcard * doesn't work when trying to send credentials(cookie)
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
     res.setHeader(
@@ -22,18 +24,13 @@ app.use((req, res, next) => {
     );
     res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
-  });
+});
 
 app.use(express.json( { limit: "10kb" }));
 
-
-
-
-// open endpoints for words, sentences and users
-
-
 app.use("/api/v1/sentences", sentenceRouter);
 app.use("/api/v1/words", wordRouter);
+app.use("/api/v1/users", userRouter);
 
 
 app.all("*", (req, res, next) => {

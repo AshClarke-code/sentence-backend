@@ -13,14 +13,14 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         validate: [validator.isEmail, "Please provide a valid email."]
-      },
-      password: {
+    },
+    password: {
         type: String,
         required: [true, "Please provide a password"],
         minlength: 8,
         select: false
-      },
-      passwordConfirm: {
+    },
+    passwordConfirm: {
         type: String,
         required: [true, "Please confirm your password"],
         validate: {
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
           },
           message: "Passwords do not match!"
         }
-      }
+    }
 });
 
 //Encrypt password
@@ -41,6 +41,11 @@ userSchema.pre("save", async function(next) {
      this.passwordConfirm = undefined;
      next();
   });
+
+userSchema.methods.correctPassword =  async function(candidatePassword, userPassword){
+    return await bcrypt.compare(candidatePassword, userPassword);
+}
+  
 
 
 

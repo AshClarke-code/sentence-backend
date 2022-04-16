@@ -4,8 +4,9 @@ const APIFeatures = require("../utils/APIFeatures");
 
 exports.getAll = (Model, dataName) =>
   catchAsync(async (req, res, next) => {
-    
-    const features = new APIFeatures(Model.find(), req.query)
+    let filter = req.user ? {user: req.user._id} : {};
+  
+    const features = new APIFeatures(Model.find(filter), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -23,7 +24,8 @@ exports.getAll = (Model, dataName) =>
 
 exports.createOne = (Model, dataName) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.create(req.body);
+    let body = req.user ? {...req.body, user: req.user._id} : req.body;
+    const doc = await Model.create(body);
 
     res.status(201).json({
       status: "success",
